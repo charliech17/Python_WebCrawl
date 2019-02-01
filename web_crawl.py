@@ -1,6 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-import lxml
+from selenium.webdriver.common.by import By
 import time
 
 start=time.time()
@@ -13,28 +13,13 @@ chromeOptions = webdriver.ChromeOptions()
 chromeOptions.headless = True
 driver=webdriver.Chrome(chrome_options=chromeOptions)
 driver.get(urls)
-innerHTML = driver.execute_script("return document.body.innerHTML")
-##print(driver.page_source)
-
-import bs4
-import re
-from time import sleep
-
-sleep(5)
-root=bs4.BeautifulSoup(innerHTML,"lxml")
-viewcount=root.find_all("span",attrs={'id':re.compile('blog_hit')}) #attrs={'class':'short-view-count style-scope yt-view-count-renderer'}
-
-#viewcount=root.find_all("h2",attrs={'class':re.compile('capsule__title fixpadv--m')})
-count=0
-for span in viewcount:
- if count==0:
-    print("本日人氣",span.string)
-    count+=1
- else:
-    print("累積人氣",span.string)
-   
 
 
+inner_text1= driver.execute_script("return arguments[0].innerText;", driver.find_element(By.XPATH, '//*[@id="blog_hit_daily"]'))
+inner_text2= driver.execute_script("return arguments[0].innerText;", driver.find_element(By.XPATH, '//*[@id="blog_hit_total"]'))
+
+print("本日人氣 ",inner_text1,"\n")
+print("累積人氣",inner_text2,"\n")
    
 end=time.time()
 sec=end-start
